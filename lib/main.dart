@@ -1,6 +1,8 @@
 import 'package:cross_connectivity/cross_connectivity.dart';
 import 'package:example_weather_app/notifiers/connection/connection_enum.dart';
 import 'package:example_weather_app/notifiers/location/location_notifier.dart';
+import 'package:example_weather_app/service/api_requests.dart';
+import 'package:example_weather_app/service/models/weather_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +47,8 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<WeatherResult?> result = ValueNotifier(null);
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
@@ -57,25 +61,23 @@ class MyHomePage extends StatelessWidget {
                 content: Text(exceptions.name),
               ),
             );
+            return;
           }
+          await ApiRequests.getCurrent(
+              Provider.of<LocationNotifier>(context, listen: false).state!);
+          result.value = await ApiRequests.getWeather(
+              Provider.of<LocationNotifier>(context, listen: false).state!);
         },
-        child: ListView(
-          children: [
-            Consumer<LocationNotifier>(
-              builder: (context, value, child) => ListTile(
-                title: Text(
-                  value.state.toString(),
-                ),
-              ),
-            ),
-            Consumer<ConnectionEnum>(
-              builder: (context, value, child) => ListTile(
-                title: Text(
-                  value.name.toString(),
-                ),
-              ),
-            ),
-          ],
+        child: ValueListenableBuilder<WeatherResult?>(
+          valueListenable: result,
+          builder: (context, WeatherResult? value, _) => ListView(
+            children: [
+              SizedBox(
+                child:
+                    Center(child: Text(value?.city.name.toString() ?? "none")),
+              )
+            ],
+          ),
         ),
       ),
     );
