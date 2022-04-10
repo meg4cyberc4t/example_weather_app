@@ -36,7 +36,7 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  " " + result.main.temp.toString() + "°",
+                  ' ' + result.main.temp.toString() + '°',
                   style: Theme.of(context).textTheme.displayMedium,
                 ),
                 Row(
@@ -44,10 +44,10 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Icon(Icons.keyboard_arrow_down),
-                    Text(result.main.tempMin.toString() + "°"),
+                    Text(result.main.tempMin.toString() + '°'),
                     const SizedBox(width: 16),
                     const Icon(Icons.keyboard_arrow_up),
-                    Text(result.main.tempMax.toString() + "°"),
+                    Text(result.main.tempMax.toString() + '°'),
                   ],
                 ),
               ],
@@ -70,15 +70,15 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Chip(
-            label: Text("${result.wind.speed.toString()} км/ч"),
+            label: Text('${result.wind.speed.toString()} км/ч'),
             avatar: const Icon(Icons.air),
           ),
           Chip(
-            label: Text("${result.main.humidity.toString()}%"),
+            label: Text('${result.main.humidity.toString()}%'),
             avatar: const Icon(Icons.water_drop_outlined),
           ),
           Chip(
-            label: Text("${result.main.pressure.toString()} гПа"),
+            label: Text('${result.main.pressure.toString()} гПа'),
             avatar: const Icon(Icons.error_outline),
           )
         ],
@@ -94,12 +94,12 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
           ListTile(
             leading: const Icon(Icons.sunny),
             title: const Text('Восход солнца'),
-            trailing: Text(DateFormat("HH:mm").format(result.sys.sunrise)),
+            trailing: Text(DateFormat('HH:mm').format(result.sys.sunrise)),
           ),
           ListTile(
             leading: const Icon(Icons.nightlight),
             title: const Text('Заход солнца'),
-            trailing: Text(DateFormat("HH:mm").format(result.sys.sunset)),
+            trailing: Text(DateFormat('HH:mm').format(result.sys.sunset)),
           ),
         ],
       ),
@@ -112,7 +112,7 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
         leading: const Icon(Icons.share),
         title: const Text('Поделиться'),
         onTap: () => Share.share(
-            "Хочу поделиться с тобой погодой! Кстати сегодня ${result.main.temp.toString()}°!"),
+            'Хочу поделиться с тобой погодой! Кстати сегодня ${result.main.temp.toString()}°!'),
       ),
     );
   }

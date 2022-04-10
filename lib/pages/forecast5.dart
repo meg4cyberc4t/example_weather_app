@@ -47,7 +47,7 @@ class _Forecast5State extends State<Forecast5>
           width: 40,
           child: Center(
             child: Text(
-              item.main.temp.round().toString() + "°",
+              item.main.temp.round().toString() + '°',
               style: Theme.of(context).textTheme.headline6,
             ),
           ),
@@ -64,12 +64,12 @@ class _Forecast5State extends State<Forecast5>
           ListTile(
             leading: const Icon(Icons.sunny),
             title: const Text('Восход солнца'),
-            trailing: Text(DateFormat("HH:mm").format(result.city.sunrise)),
+            trailing: Text(DateFormat('HH:mm').format(result.city.sunrise)),
           ),
           ListTile(
             leading: const Icon(Icons.nightlight),
             title: const Text('Заход солнца'),
-            trailing: Text(DateFormat("HH:mm").format(result.city.sunset)),
+            trailing: Text(DateFormat('HH:mm').format(result.city.sunset)),
           ),
         ],
       ),
@@ -89,7 +89,7 @@ class _Forecast5State extends State<Forecast5>
           middleSpeed += element / speeds.length;
         }
         Share.share(
-            "Хочу поделиться с тобой погодой! Кстати на неделе средняя скорость ветра $middleSpeed км/ч!");
+            'Хочу поделиться с тобой погодой! Кстати на неделе средняя скорость ветра $middleSpeed км/ч!');
       },
     );
   }
