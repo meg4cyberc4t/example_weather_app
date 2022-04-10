@@ -39,6 +39,7 @@ dependencies:
   cross_connectivity: ^3.0.5
   http: ^0.13.4
   intl: ^0.17.0
+  share: ^2.0.4
 
 dev_dependencies:
   flutter_test:

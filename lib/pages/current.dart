@@ -4,6 +4,7 @@ import 'package:example_weather_app/service/models/current_result.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class Current extends StatefulWidget {
   const Current({Key? key}) : super(key: key);
@@ -105,6 +106,17 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  Widget _buildShareButton(CurrentResult result) {
+    return SliverToBoxAdapter(
+      child: ListTile(
+        leading: const Icon(Icons.share),
+        title: const Text('Поделиться'),
+        onTap: () => Share.share(
+            "Хочу поделиться с тобой погодой! Кстати сегодня ${result.main.temp.toString()}°!"),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -129,6 +141,7 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
                 _buildIndicators(value),
                 _buildWind(value),
                 _buildSunrise(value),
+                _buildShareButton(value),
               ],
             ),
           );

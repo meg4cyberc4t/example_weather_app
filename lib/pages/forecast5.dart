@@ -5,6 +5,7 @@ import 'package:example_weather_app/service/models/weather_result.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class Forecast5 extends StatefulWidget {
   const Forecast5({Key? key}) : super(key: key);
@@ -25,13 +26,13 @@ class _Forecast5State extends State<Forecast5>
 
   Widget _buildAppBar(WeatherResult result) {
     return SliverAppBar(
-      title: Text(
-        result.city.name,
-        style: const TextStyle(color: Colors.black),
-      ),
-      centerTitle: true,
-      backgroundColor: Colors.transparent,
-    );
+        title: Text(
+          result.city.name,
+          style: const TextStyle(color: Colors.black),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        actions: [_buildShareButton(result)]);
   }
 
   Widget _buildDay(CurrentItemResult item) {
@@ -72,6 +73,24 @@ class _Forecast5State extends State<Forecast5>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildShareButton(WeatherResult result) {
+    return IconButton(
+      icon: const Icon(
+        Icons.share,
+        color: Colors.black,
+      ),
+      onPressed: () {
+        List<double> speeds = result.list.map((e) => e.wind.speed).toList();
+        double middleSpeed = 0;
+        for (var element in speeds) {
+          middleSpeed += element / speeds.length;
+        }
+        Share.share(
+            "Хочу поделиться с тобой погодой! Кстати на неделе средняя скорость ветра $middleSpeed км/ч!");
+      },
     );
   }
 
