@@ -2,12 +2,13 @@
  An application with two screens as an example of interaction with the API and states.
 
 # Images
-
-[](https://sun9-28.userapi.com/impf/gWewtnKs9Bu5wci-nGVz4bigdIwML1qOkbr7UA/7uPZq3eWp7U.jpg?size=997x2160&quality=96&sign=7223235184c7c620a581d0b9273cbd67&type=album)
-[](https://sun1-29.userapi.com/impf/C0QyrxKfB5gUhyCvwstBh411kSff7HD8xLRIMw/3iwHPg3wllU.jpg?size=997x2160&quality=96&sign=e14c9860cb1233c746fa9fca30b73c5e&type=album)
+<div>
+ <img style="height:700px;" src="https://user-images.githubusercontent.com/66907532/162628767-4929a611-523e-4cf8-a644-21801b4937e8.png" />
+ <img style="height:700px;" src="https://user-images.githubusercontent.com/66907532/162628771-4c4cc588-fe61-40a1-8d2f-8a9a8ab52270.png" />
+</div>
 
 # Для разработчиков
 
-- Для состояний используются Provider, ChangeNotifier (lib/notifiers), ValueListanable.
+- Для состояний используется Provider (lib/notifiers).
 - Дизайн делал на основных виджетах, прошу не обращать его внимание.
 - Ключ приложения в api_requests не скрывался специально, чтоб была возможность ванильно запустить проект.
