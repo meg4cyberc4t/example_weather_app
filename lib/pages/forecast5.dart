@@ -13,25 +13,14 @@ class Forecast5 extends StatefulWidget {
   State<Forecast5> createState() => _Forecast5State();
 }
 
-class _Forecast5State extends State<Forecast5> {
+class _Forecast5State extends State<Forecast5>
+    with AutomaticKeepAliveClientMixin {
   late ValueNotifier<WeatherResult?> result;
 
   @override
   void initState() {
     result = ValueNotifier<WeatherResult?>(null);
     super.initState();
-  }
-
-  Future<void> _updateCurrentWeather() async {
-    LocationExceptionsEnum exceptions =
-        await context.read<LocationNotifier>().updateLocation();
-    if (exceptions != LocationExceptionsEnum.none) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(exceptions.name)));
-      return;
-    }
-    result.value = await ApiRequests.getWeather(
-        Provider.of<LocationNotifier>(context, listen: false).state!);
   }
 
   Widget _buildAppBar(WeatherResult result) {
@@ -86,57 +75,39 @@ class _Forecast5State extends State<Forecast5> {
     );
   }
 
-  Widget _buildNoValueCard() {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/cloudy.jpeg'),
-          alignment: Alignment.center,
-          fit: BoxFit.cover,
-          repeat: ImageRepeat.noRepeat,
-        ),
-      ),
-      child: Center(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Самый точный прогноз погоды!",
-            style: Theme.of(context).textTheme.headline6,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            child: const Text('Узнать'),
-            onPressed: _updateCurrentWeather,
-          )
-        ],
-      )),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      body: ValueListenableBuilder<WeatherResult?>(
-          valueListenable: result,
-          builder: (BuildContext context, WeatherResult? value, _) {
-            if (value == null) return _buildNoValueCard();
-            return Container(
-              color: Theme.of(context).backgroundColor,
-              child: SafeArea(
-                child: CustomScrollView(
-                  slivers: [
-                    _buildAppBar(value),
-                    const SliverToBoxAdapter(child: Divider()),
-                    _buildSunrise(value),
-                    const SliverToBoxAdapter(child: Divider()),
-                    ...value.list.map((e) => _buildDay(e))
-                  ],
-                ),
+      body: FutureBuilder<WeatherResult>(
+          future:
+              ApiRequests.getWeather(context.read<LocationNotifier>().state!),
+          builder: (BuildContext context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(snapshot.error!.toString()),
+              );
+            }
+            var value = snapshot.data!;
+            return SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  _buildAppBar(value),
+                  const SliverToBoxAdapter(child: Divider()),
+                  _buildSunrise(value),
+                  const SliverToBoxAdapter(child: Divider()),
+                  ...value.list.map((e) => _buildDay(e))
+                ],
               ),
             );
           }),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

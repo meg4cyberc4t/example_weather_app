@@ -12,27 +12,7 @@ class Current extends StatefulWidget {
   State<Current> createState() => _CurrentState();
 }
 
-class _CurrentState extends State<Current> {
-  late ValueNotifier<CurrentResult?> result;
-
-  @override
-  void initState() {
-    result = ValueNotifier<CurrentResult?>(null);
-    super.initState();
-  }
-
-  Future<void> _updateCurrentWeather() async {
-    LocationExceptionsEnum exceptions =
-        await context.read<LocationNotifier>().updateLocation();
-    if (exceptions != LocationExceptionsEnum.none) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(exceptions.name)));
-      return;
-    }
-    result.value = await ApiRequests.getCurrent(
-        Provider.of<LocationNotifier>(context, listen: false).state!);
-  }
-
+class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
   Widget _buildAppBar(CurrentResult? result) {
     final DateTime dt = result?.dt.toLocal() ?? DateTime.now();
 
@@ -131,56 +111,38 @@ class _CurrentState extends State<Current> {
     );
   }
 
-  Widget _buildNoValueCard() {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/cloudy.jpeg'),
-          alignment: Alignment.center,
-          fit: BoxFit.cover,
-          repeat: ImageRepeat.noRepeat,
-        ),
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Scaffold(
+      body: FutureBuilder<CurrentResult>(
+        future: ApiRequests.getCurrent(context.read<LocationNotifier>().state!),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error!.toString()),
+            );
+          }
+          var value = snapshot.data!;
+          return SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(value),
+                _buildIndicators(value),
+                _buildWind(value),
+                _buildSunrise(value),
+              ],
+            ),
+          );
+        },
       ),
-      child: Center(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            "Самый точный прогноз погоды!",
-            style: Theme.of(context).textTheme.headline6,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            child: const Text('Узнать'),
-            onPressed: _updateCurrentWeather,
-          )
-        ],
-      )),
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: ValueListenableBuilder<CurrentResult?>(
-          valueListenable: result,
-          builder: (BuildContext context, CurrentResult? value, _) {
-            if (value == null) return _buildNoValueCard();
-            return Container(
-              color: Theme.of(context).backgroundColor,
-              child: SafeArea(
-                child: CustomScrollView(
-                  slivers: [
-                    _buildAppBar(value),
-                    _buildIndicators(value),
-                    _buildWind(value),
-                    _buildSunrise(value),
-                  ],
-                ),
-              ),
-            );
-          }),
-    );
-  }
+  bool get wantKeepAlive => true;
 }
