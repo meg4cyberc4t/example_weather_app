@@ -13,12 +13,10 @@ class Current extends StatefulWidget {
 }
 
 class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
-  Widget _buildAppBar(CurrentResult? result) {
-    final DateTime dt = result?.dt.toLocal() ?? DateTime.now();
-
+  Widget _buildAppBar(CurrentResult result) {
     return SliverAppBar(
       title: Text(
-        DateFormat(DateFormat.ABBR_MONTH_WEEKDAY_DAY).format(dt),
+        result.name,
         style: const TextStyle(color: Colors.black),
       ),
       centerTitle: true,
@@ -31,10 +29,6 @@ class _CurrentState extends State<Current> with AutomaticKeepAliveClientMixin {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            result.name,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
           Padding(
             padding: const EdgeInsets.all(32.0),
             child: Column(
