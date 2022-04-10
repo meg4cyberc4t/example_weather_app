@@ -54,66 +54,71 @@ class _RouterState extends State<Router> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<LocationNotifier, ConnectionEnum>(
-      builder: (context, location, connection, child) {
-        if (location.state == null) {
-          return Scaffold(
-            body: Center(
-                child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Геопозиция недоступна'),
-                TextButton(
-                  child: const Text('Повторить'),
-                  onPressed: context.read<LocationNotifier>().updateLocation,
-                )
-              ],
-            )),
-          );
-        } else if (connection == ConnectionEnum.disabled) {
-          return Scaffold(
-            body: Center(
-              child: Column(
+    return FutureBuilder(
+      future: context.read<LocationNotifier>().updateLocation(),
+      builder: (context, snapshot) =>
+          Consumer2<LocationNotifier, ConnectionEnum>(
+        builder: (context, location, connection, child) {
+          if (location.state == null) {
+            return Scaffold(
+              body: Center(
+                  child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Интернет недоступен'),
+                  const Text('Геопозиция недоступна'),
                   TextButton(
                     child: const Text('Повторить'),
                     onPressed: context.read<LocationNotifier>().updateLocation,
                   )
                 ],
+              )),
+            );
+          } else if (connection == ConnectionEnum.disabled) {
+            return Scaffold(
+              body: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Интернет недоступен'),
+                    TextButton(
+                      child: const Text('Повторить'),
+                      onPressed:
+                          context.read<LocationNotifier>().updateLocation,
+                    )
+                  ],
+                ),
               ),
+            );
+          }
+          return child!;
+        },
+        child: Scaffold(
+          body: PageView(
+              controller: _controller,
+              children: const [
+                Current(),
+                Forecast5(),
+              ],
+              onPageChanged: (final int value) => selectedIndex.value = value),
+          bottomNavigationBar: ValueListenableBuilder<int>(
+            valueListenable: selectedIndex,
+            builder: (context, value, _) => NavigationBar(
+              height: 60,
+              labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+              animationDuration: const Duration(milliseconds: 400),
+              selectedIndex: value,
+              onDestinationSelected: _controller.jumpToPage,
+              destinations: const <Widget>[
+                NavigationDestination(
+                  icon: Icon(Icons.keyboard_capslock_outlined),
+                  label: 'Current',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.list_outlined),
+                  label: 'Forecast5',
+                ),
+              ],
             ),
-          );
-        }
-        return child!;
-      },
-      child: Scaffold(
-        body: PageView(
-            controller: _controller,
-            children: const [
-              Current(),
-              Forecast5(),
-            ],
-            onPageChanged: (final int value) => selectedIndex.value = value),
-        bottomNavigationBar: ValueListenableBuilder<int>(
-          valueListenable: selectedIndex,
-          builder: (context, value, _) => NavigationBar(
-            height: 60,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-            animationDuration: const Duration(milliseconds: 400),
-            selectedIndex: value,
-            onDestinationSelected: _controller.jumpToPage,
-            destinations: const <Widget>[
-              NavigationDestination(
-                icon: Icon(Icons.keyboard_capslock_outlined),
-                label: 'Current',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.list_outlined),
-                label: 'Forecast5',
-              ),
-            ],
           ),
         ),
       ),
