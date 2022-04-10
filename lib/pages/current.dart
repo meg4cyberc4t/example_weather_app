@@ -89,6 +89,28 @@ class _CurrentState extends State<Current> {
     );
   }
 
+  Widget _buildWind(CurrentResult result) {
+    return SliverToBoxAdapter(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Chip(
+            label: Text("${result.wind.speed.toString()} км/ч"),
+            avatar: const Icon(Icons.air),
+          ),
+          Chip(
+            label: Text("${result.main.humidity.toString()}%"),
+            avatar: const Icon(Icons.water_drop_outlined),
+          ),
+          Chip(
+            label: Text("${result.main.pressure.toString()} гПа"),
+            avatar: const Icon(Icons.error_outline),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildNoValueCard() {
     return Container(
       decoration: const BoxDecoration(
@@ -132,6 +154,7 @@ class _CurrentState extends State<Current> {
                   slivers: [
                     _buildAppBar(value),
                     _buildIndicators(value),
+                    _buildWind(value),
                   ],
                 ),
               ),
