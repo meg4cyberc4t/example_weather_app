@@ -124,5 +124,5 @@ class City {
 }
 
 DateTime dateTimeFromTimestamp(int timestamp) {
-  return DateTime.fromMicrosecondsSinceEpoch(timestamp);
+  return DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
 }
