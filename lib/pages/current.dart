@@ -111,6 +111,26 @@ class _CurrentState extends State<Current> {
     );
   }
 
+  Widget _buildSunrise(CurrentResult result) {
+    return SliverToBoxAdapter(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.sunny),
+            title: const Text('Восход солнца'),
+            trailing: Text(DateFormat("HH:mm").format(result.sys.sunrise)),
+          ),
+          ListTile(
+            leading: const Icon(Icons.nightlight),
+            title: const Text('Заход солнца'),
+            trailing: Text(DateFormat("HH:mm").format(result.sys.sunset)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildNoValueCard() {
     return Container(
       decoration: const BoxDecoration(
@@ -155,6 +175,7 @@ class _CurrentState extends State<Current> {
                     _buildAppBar(value),
                     _buildIndicators(value),
                     _buildWind(value),
+                    _buildSunrise(value),
                   ],
                 ),
               ),
